@@ -1,5 +1,6 @@
 package academy.kovalevskyi.javadeepdive.week0.day2;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public record Csv(String[] header, String[][] values) {
@@ -35,12 +36,17 @@ public record Csv(String[] header, String[][] values) {
   }
 
   @Override
-  public int hashCode() {
-    return 0;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Csv csv = (Csv) o;
+    return Arrays.equals(header, csv.header) && Arrays.deepEquals(values, csv.values);
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return false;
+  public int hashCode() {
+    int result = Arrays.hashCode(header);
+    result = 31 * result + Arrays.deepHashCode(values);
+    return result;
   }
 }

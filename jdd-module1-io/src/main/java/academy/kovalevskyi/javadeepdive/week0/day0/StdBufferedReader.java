@@ -39,9 +39,9 @@ public class StdBufferedReader implements Closeable {
       for (int i = pointer + 1; i < read; i++) {
         char c = buffer[i];
         pointer++;
-        if (isEOL(c) || isEOF(c)) {
+        if (isEol(c) || isEof(c)) {
           result = copyElements(result, counter, counter);
-          if (isEOF(c)) {
+          if (isEof(c)) {
             pointer = -1;
           }
           return result;
@@ -64,11 +64,11 @@ public class StdBufferedReader implements Closeable {
     return res;
   }
 
-  private boolean isEOL(char c) {
+  private boolean isEol(char c) {
     return c == '\n' || c == '\r';
   }
 
-  private boolean isEOF(char c) {
+  private boolean isEof(char c) {
     return c == 0;
   }
 

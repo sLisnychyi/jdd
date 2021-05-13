@@ -36,37 +36,5 @@
     </dependencies>
     <build>
         <finalName>module-1</finalName>
-        <plugins>
-            <plugin>
-                <groupId>com.cosium.code</groupId>
-                <artifactId>maven-git-code-format</artifactId>
-                <version>1.38</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install-hooks</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[3.5.4,)</version>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 </project>

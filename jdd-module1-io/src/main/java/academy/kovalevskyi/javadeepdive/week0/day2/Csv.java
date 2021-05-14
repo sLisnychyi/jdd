@@ -37,8 +37,12 @@ public record Csv(String[] header, String[][] values) {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     Csv csv = (Csv) o;
     return Arrays.equals(header, csv.header) && Arrays.deepEquals(values, csv.values);
   }

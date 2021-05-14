@@ -37,4 +37,9 @@
     <build>
         <finalName>module-1</finalName>
     </build>
+    <properties>
+        <project.build.sorceEncoding>UTF-8</project.build.sorceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
 </project>

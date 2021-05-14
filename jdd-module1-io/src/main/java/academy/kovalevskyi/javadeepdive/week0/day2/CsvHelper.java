@@ -21,16 +21,16 @@ public class CsvHelper {
   public static Csv parseFile(Reader reader, boolean withHeader, char delimiter)
       throws FileNotFoundException {
     Csv.Builder csvBuilder = new Csv.Builder();
-    try (StdBufferedReader bufferedReader = new StdBufferedReader(reader, 100)) {
+    try (StdBufferedReader bufferedReader = new StdBufferedReader(reader)) {
       if (withHeader) {
-        String[] header = getValues(delimiter, bufferedReader.readLine());
+        String[] header = new String(bufferedReader.readLine()).split(String.valueOf(delimiter));
         csvBuilder.header(header);
       }
       List<String[]> values = new ArrayList<>();
       while (bufferedReader.hasNext()) {
         char[] line = bufferedReader.readLine();
         if (line != null && line.length > 0) {
-          values.add(getValues(delimiter, line));
+          values.add(new String(line).split(String.valueOf(delimiter)));
         }
       }
       csvBuilder.values(values.toArray(new String[][] {}));
@@ -40,32 +40,15 @@ public class CsvHelper {
     return csvBuilder.build();
   }
 
-  private static String[] getValues(char delimiter, char[] line) throws IOException {
-    List<String> result = new ArrayList<>();
-    StringBuilder value = new StringBuilder();
-    for (char c : line) {
-      if (c == delimiter) {
-        result.add(value.toString());
-        value = new StringBuilder();
-      } else {
-        value.append(c);
-      }
-    }
-    if (!value.isEmpty()) {
-      result.add(value.toString());
-    }
-    return result.toArray(new String[] {});
-  }
-
   public static void writeCsv(Writer writer, Csv csv, char delimiter) throws IOException {
     try (writer) {
       if (csv.withHeader()) {
         writer.write(String.join(String.valueOf(delimiter), csv.header()));
-        writer.write("\n");
+        writer.write(System.lineSeparator());
       }
       for (String[] line : csv.values()) {
         writer.write(String.join(String.valueOf(delimiter), line));
-        writer.write("\n");
+        writer.write(System.lineSeparator());
       }
     }
   }

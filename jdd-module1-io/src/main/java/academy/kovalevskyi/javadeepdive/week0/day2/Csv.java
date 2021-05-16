@@ -16,7 +16,7 @@ public record Csv(String[] header, String[][] values) {
       this.values = values;
     }
 
-    public Builder header(String[] header) {
+    public Builder header(String... header) {
       this.header = header;
       return this;
     }
@@ -52,5 +52,14 @@ public record Csv(String[] header, String[][] values) {
     int result = Arrays.hashCode(header);
     result = 31 * result + Arrays.deepHashCode(values);
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "Csv{"
+            + "header="
+            + Arrays.toString(header)
+            + ", values=" + Arrays.deepToString(values)
+            + '}';
   }
 }

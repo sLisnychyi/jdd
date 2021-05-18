@@ -8,5 +8,6 @@ days:
     - w0d3 - NanoSql over custom readers
 - week2: networking
     - w1d0 - ServerSocket, http
+    - w1d1 - Concurrent ServerSocket
 
 modules: [#1 i/o, #2 networking]

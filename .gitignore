@@ -1,5 +1,5 @@
 # Project exclude paths
-/jdd-module1-io/target/
+/target/
 .idea
 .DS_Store
 *.iml

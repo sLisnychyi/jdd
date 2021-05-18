@@ -36,7 +36,7 @@ public class HttpServer implements Runnable {
   public void run() {
     while (isLive()) {
       try (Socket socket = serverSocket.accept()) {
-        final HttpRequestHandler requestHandler = new HttpRequestHandler(socket);
+        HttpRequestHandler requestHandler = new HttpRequestHandler(socket);
         requestHandler.executeRequest();
       } catch (SocketException e) {
         System.out.println("Socket closed!!!");

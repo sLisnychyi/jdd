@@ -9,12 +9,13 @@ import java.util.concurrent.Executors;
 
 public class ConcurrentHttpServer implements Runnable {
   public static final int DEFAULT_PORT = 8080;
+  public static final int THREADS = 4;
 
   private final ExecutorService executorService;
   private final ServerSocket serverSocket;
 
   public ConcurrentHttpServer() {
-    this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    this.executorService = Executors.newFixedThreadPool(THREADS);
     try {
       this.serverSocket = new ServerSocket(DEFAULT_PORT);
     } catch (IOException e) {

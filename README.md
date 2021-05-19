@@ -9,5 +9,6 @@ days:
 - week2: networking
     - w1d0 - ServerSocket, http
     - w1d1 - Concurrent ServerSocket
+    - w1d2 - Concurrent http server with controller
 
 modules: [#1 i/o, #2 networking]

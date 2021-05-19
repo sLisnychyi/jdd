@@ -3,6 +3,7 @@ package academy.kovalevskyi.javadeepdive.week1.day1;
 import academy.kovalevskyi.javadeepdive.week1.day0.HttpRequestHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,14 +41,12 @@ public class ConcurrentHttpServer implements Runnable {
   @Override
   public void run() {
     while (isLive()) {
-      executorService.submit(
-          () -> {
-            try {
-              new HttpRequestHandler(serverSocket.accept()).executeRequest();
-            } catch (IOException e) {
-              // no-op
-            }
-          });
+      try {
+        Socket socket = serverSocket.accept();
+        executorService.submit(() -> new HttpRequestHandler(socket).executeRequest());
+      } catch (IOException e) {
+        // no-op
+      }
     }
   }
 

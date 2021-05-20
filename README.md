@@ -10,5 +10,6 @@ days:
     - w1d0 - ServerSocket, http
     - w1d1 - Concurrent ServerSocket
     - w1d2 - Concurrent http server with controller
+    - w1d3 - Custom http handler 
 
 modules: [#1 i/o, #2 networking]

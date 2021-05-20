@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
 
 public class ConcurrentHttpServerWithPath extends Thread {
   private static final int DEFAULT_PORT = 8080;
-  public static final int THREADS = 4;
 
   private final ExecutorService executorService;
   private final Map<String, HttpRequestsHandler> handlers;
@@ -24,7 +23,7 @@ public class ConcurrentHttpServerWithPath extends Thread {
 
   public ConcurrentHttpServerWithPath() {
     this.handlers = new HashMap<>();
-    this.executorService = Executors.newFixedThreadPool(THREADS);
+    this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     try {
       this.serverSocket = new ServerSocket(DEFAULT_PORT);
     } catch (IOException e) {
@@ -75,6 +74,6 @@ public class ConcurrentHttpServerWithPath extends Thread {
   }
 
   public boolean isLive() {
-    return !serverSocket.isClosed() && serverSocket.isBound();
+    return !serverSocket.isClosed();
   }
 }

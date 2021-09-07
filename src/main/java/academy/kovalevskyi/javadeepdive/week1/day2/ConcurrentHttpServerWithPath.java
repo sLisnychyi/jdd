@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,7 +23,7 @@ public class ConcurrentHttpServerWithPath extends Thread {
   private final ServerSocket serverSocket;
 
   public ConcurrentHttpServerWithPath() {
-    this.handlers = new HashMap<>();
+    this.handlers = new ConcurrentHashMap<>();
     this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     try {
       this.serverSocket = new ServerSocket(DEFAULT_PORT);
@@ -32,7 +33,9 @@ public class ConcurrentHttpServerWithPath extends Thread {
   }
 
   public void addHandler(HttpRequestsHandler handler) {
-    this.handlers.put(handler.path(), handler);
+    if(isLive()) {
+      this.handlers.put(handler.path(), handler);
+    }
   }
 
   @Override

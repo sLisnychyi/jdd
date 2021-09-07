@@ -33,7 +33,7 @@ public class ConcurrentHttpServerWithPath extends Thread {
   }
 
   public void addHandler(HttpRequestsHandler handler) {
-    if(isLive()) {
+    if (isLive()) {
       this.handlers.put(handler.path(), handler);
     }
   }

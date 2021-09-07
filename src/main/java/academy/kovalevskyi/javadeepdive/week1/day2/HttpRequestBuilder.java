@@ -3,7 +3,9 @@ package academy.kovalevskyi.javadeepdive.week1.day2;
 import academy.kovalevskyi.javadeepdive.week0.day0.StdBufferedReader;
 import academy.kovalevskyi.javadeepdive.week0.day3.RequestException;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class HttpRequestBuilder {
   private static final String CONTENT_TYPE = "Content-Type";

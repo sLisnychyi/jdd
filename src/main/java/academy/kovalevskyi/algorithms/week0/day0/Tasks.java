@@ -1,18 +1,17 @@
 package academy.kovalevskyi.algorithms.week0.day0;
 
-import java.util.Arrays;
-
 public class Tasks {
+  private static final Sort SORT = new Sort() {};
+
   public static boolean sameCharactersSorting(String left, String right) {
     if (left.length() != right.length()) {
       return false;
     }
-    char[] first = left.toCharArray();
-    char[] second = right.toCharArray();
-    Arrays.sort(first);
-    Arrays.sort(second);
+    char[] leftArr = left.toCharArray();
+    char[] rightArr = right.toCharArray();
+    SORT.sort(leftArr, rightArr);
     for (int i = 0; i < left.length(); i++) {
-      if (first[i] != second[i]) {
+      if (leftArr[i] != rightArr[i]) {
         return false;
       }
     }
@@ -23,14 +22,14 @@ public class Tasks {
     if (left.length() != right.length()) {
       return false;
     }
-    char[] result = new char[26];
+    char[] result = new char[256];
     for (char value : left.toCharArray()) {
-      result[value - 97] = 1;
+      result[value]++;
     }
     for (char value : right.toCharArray()) {
-      char c = result[value - 97];
+      char c = result[value];
       if (c == 1) {
-        result[value - 97] = 0;
+        result[value]--;
       } else {
         return false;
       }

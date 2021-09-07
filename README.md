@@ -1,12 +1,10 @@
 ###### AWJ Sep,2021
 days:
 - week0: sorting
-  - w0d0 - Bubble sort with 
+  - w0d0 - Bubble sort. Tasks: comparing same strings 
+  - w0d1 - Insertion sort. Tasks: get middle, check if hash cycle from linked-list  
   
-
 modules: [#1 sorting]
-
-
 
 ###### JDD May,2021
 

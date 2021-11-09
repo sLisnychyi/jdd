@@ -17,7 +17,7 @@ public interface Sort {
 
   default void sort(final char[] target, final Comparator<Character> comparator) {
     for (int i = 0; i < target.length; i++) {
-      for (int j = i + 1; j < target.length; j++) {
+      for (int j = i + 1; j < target.length - i - 1; j++) {
         if (comparator.compare(target[i], target[j]) > 0) {
           char tmp = target[i];
           target[i] = target[j];

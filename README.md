@@ -1,4 +1,4 @@
-###### AWJ Sep,2021
+###### AWJ Sep,Nov 2021 
 days:
 - week0: sorting
   - w0d0 - Bubble sort. Tasks: comparing same strings 

@@ -11,10 +11,7 @@ public class Tasks {
     Node next = start.next;
     while (next != null) {
       cur = cur.next;
-      next = next.next;
-      if (next != null) {
-        next = next.next;
-      }
+      next = next.next != null ? next.next.next : null;
     }
     return cur.value;
   }
@@ -26,10 +23,7 @@ public class Tasks {
         return true;
       }
       start = start.next;
-      next = next.next;
-      if (next != null) {
-        next = next.next;
-      }
+      next = next.next != null ? next.next.next : null;
     }
     return false;
   }

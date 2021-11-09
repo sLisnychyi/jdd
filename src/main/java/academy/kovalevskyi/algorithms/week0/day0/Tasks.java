@@ -28,7 +28,7 @@ public class Tasks {
     }
     for (char value : right.toCharArray()) {
       char c = result[value];
-      if (c == 1) {
+      if (c > 1) {
         result[value]--;
       } else {
         return false;

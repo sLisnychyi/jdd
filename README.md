@@ -2,9 +2,10 @@
 days:
 - week0: sorting
   - w0d0 - Bubble sort. Tasks: comparing same strings 
-  - w0d1 - Insertion sort. Tasks: get middle, check if hash cycle from linked-list  
+  - w0d1 - Insertion sort. Tasks: get middle, check if hash cycle from linked-list
+  - wod2 - Merge sort. Tasks: find with binary search
   
-modules: [#1 sorting]
+modules: [#1 sorting, string comparison, binary search, linked-list]
 
 ###### JDD May,2021
 

@@ -4,44 +4,72 @@ import academy.kovalevskyi.algorithms.week0.day0.Sort;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.util.Arrays.copyOf;
+import static java.util.Arrays.copyOfRange;
 
 public class MergeSort implements Sort {
 
   @Override
   public <T> void sort(T[] target, Comparator<T> comparator) {
-    T[] sortedArray = createSortedArray(target, comparator);
-    System.arraycopy(sortedArray, 0, target, 0, target.length);
+    if (target.length > 0) sort(target, 0, target.length - 1, comparator);
+  }
+
+  private <T> void sort(T[] target, int left, int right, Comparator<T> comparator) {
+    if (right - left == 0) return;
+    if (right - left == 1) {
+      if (comparator.compare(target[left], target[right]) > 0) {
+        swap(target, left, right);
+      }
+    }
+    int mid = (right + left) / 2;
+    sort(target, left, mid, comparator);
+    sort(target, mid + 1, right, comparator);
+    for (int i = left; i < right; i++) {
+      if (comparator.compare(target[i], target[i + 1]) > 0) {
+        int k = i;
+        while (k >= 0 && comparator.compare(target[k], target[k + 1]) > 0) {
+          swap(target, k, k + 1);
+          k--;
+        }
+      }
+    }
+  }
+
+  private <T> void swap(T[] target, int i, int j) {
+    T tmp = target[i];
+    target[i] = target[j];
+    target[j] = tmp;
   }
 
   @Override
   public <T> T[] createSortedArray(T[] target, Comparator<T> comparator) {
-    if (target == null) throw new NullPointerException();
-    if (target.length == 1) {
-      return Arrays.copyOf(target, 1);
-    }
-    T[] left = createSortedArray(Arrays.copyOfRange(target, 0, target.length / 2), comparator);
-    T[] right =
-        createSortedArray(Arrays.copyOfRange(target, target.length / 2, target.length), comparator);
-    return merge(left, right, comparator);
+    T[] result = copyOf(target, target.length);
+    sort(result, comparator);
+    return result;
   }
 
-  private <T> T[] merge(T[] left, T[] right, Comparator<T> comparator) {
-    T[] result = Arrays.copyOf(left, left.length + right.length);
-    int i = 0;
-    int j = 0;
-    while (i + j != left.length + right.length) {
-      if (i >= left.length) {
-        result[i + j] = right[j++];
-      } else if (j >= right.length) {
-        result[i + j] = left[i++];
-      } else {
-        if (comparator.compare(left[i], right[j]) > 0) {
-          result[i + j] = right[j++];
-        } else {
-          result[i + j] = left[i++];
-        }
-      }
-    }
-    return result;
+  @Override
+  public String complexityBest() {
+    return "N*log(N)";
+  }
+
+  @Override
+  public String complexityAverage() {
+    return "N*log(N)";
+  }
+
+  @Override
+  public String complexityWorst() {
+    return "N*log(N)";
+  }
+
+  @Override
+  public String spaceComplexityWorst() {
+    return "N";
   }
 }

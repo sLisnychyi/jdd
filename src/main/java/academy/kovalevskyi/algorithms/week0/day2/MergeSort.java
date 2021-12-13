@@ -40,12 +40,6 @@ public class MergeSort implements Sort {
     }
   }
 
-  private <T> void swap(T[] target, int i, int j) {
-    T tmp = target[i];
-    target[i] = target[j];
-    target[j] = tmp;
-  }
-
   @Override
   public <T> T[] createSortedArray(T[] target, Comparator<T> comparator) {
     T[] result = copyOf(target, target.length);

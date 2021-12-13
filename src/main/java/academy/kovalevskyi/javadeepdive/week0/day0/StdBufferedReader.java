@@ -4,74 +4,72 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
 
-// https://drive.google.com/file/d/15E8Q8_rYDWqO2MrR2CQLePEbQtL88MzE/view?usp=sharing
 public class StdBufferedReader implements Closeable {
   private static final int DEFAULT_BUFFER_SIZE = 10;
 
   private final Reader reader;
   private char[] buffer;
-  private int pointer = -1;
+  private int pointer;
 
   public StdBufferedReader(Reader reader) {
     this(reader, DEFAULT_BUFFER_SIZE);
   }
 
   public StdBufferedReader(Reader reader, int bufferSize) {
-    if (reader == null) {
-      throw new NullPointerException("Reader can't be empty.");
-    }
-    if (bufferSize <= 0) {
-      throw new IllegalArgumentException(String.format("Invalid buffer size[%s]", bufferSize));
-    }
+    if (reader == null) throw new NullPointerException();
+    if (bufferSize <= 1) throw new IllegalArgumentException();
     this.reader = reader;
     this.buffer = new char[bufferSize];
   }
 
   public boolean hasNext() throws IOException {
-    return reader.ready() || pointer >= 0;
+    return reader.ready();
   }
 
   public char[] readLine() throws IOException {
     char[] result = new char[buffer.length];
-    int counter = 0;
-    while (hasNext() || pointer > 0) {
-      int read = pointer < 0 ? reader.read(buffer, 0, buffer.length) : buffer.length;
-      for (int i = pointer + 1; i < read; i++) {
-        char c = buffer[i];
-        pointer++;
-        if (isEol(c) || isEof(c)) {
-          result = copyElements(result, counter, counter);
-          if (isEof(c)) {
-            pointer = -1;
-          }
-          return result;
+    int cursor = 0;
+
+    if (pointer > 0) {
+      while (pointer < buffer.length) {
+        char elem = buffer[pointer++];
+        if (elem == '\n' || elem == '\r' || elem == 0) {
+          char[] dest = new char[cursor];
+          System.arraycopy(result, 0, dest, 0, cursor);
+          return elem == 0 && cursor == 0 ? null : dest;
         }
-        result[counter++] = c;
+        result[cursor++] = elem;
       }
-      if (hasNext()) {
-        result = copyElements(result, result.length + buffer.length, counter);
-        buffer = new char[buffer.length];
-      }
-      pointer = -1;
     }
-    result = copyElements(result, counter, counter);
-    return result.length == 0 ? new char[0] : result;
+
+    int read = reader.read(buffer, 0, buffer.length);
+    while (read > 0) {
+      if (cursor + pointer > result.length - 1) {
+        char[] dest = new char[result.length + buffer.length];
+        System.arraycopy(result, 0, dest, 0, result.length);
+        result = dest;
+      }
+      pointer = 0;
+      while (pointer < read) {
+        char elem = buffer[pointer++];
+        if (elem == '\n' || elem == '\r' || elem == 0) {
+          char[] dest = new char[cursor];
+          System.arraycopy(result, 0, dest, 0, cursor);
+          return elem == 0 && cursor == 0 ? null : dest;
+        }
+        result[cursor++] = elem;
+      }
+      buffer = new char[buffer.length];
+      read = reader.read(buffer, 0, buffer.length);
+    }
+
+    if (cursor == 0) return null;
+    char[] dest = new char[cursor];
+    System.arraycopy(result, 0, dest, 0, cursor);
+    return dest;
   }
 
-  private char[] copyElements(char[] arr, int size, int elements) {
-    char[] res = new char[size];
-    System.arraycopy(arr, 0, res, 0, elements);
-    return res;
-  }
-
-  private boolean isEol(char c) {
-    return c == '\n' || c == '\r';
-  }
-
-  private boolean isEof(char c) {
-    return c == 0;
-  }
-
+  @Override
   public void close() throws IOException {
     reader.close();
   }

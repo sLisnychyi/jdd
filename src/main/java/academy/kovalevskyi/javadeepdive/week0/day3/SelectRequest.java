@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class SelectRequest extends AbstractRequest<String[][]> {
   private final Csv csv;
@@ -26,28 +27,23 @@ public class SelectRequest extends AbstractRequest<String[][]> {
   protected String[][] execute() throws RequestException {
     Optional<Integer> whereColumnIndex =
         Optional.ofNullable(selector)
-            .map(selector -> getColumnIndex(csv.header(), selector.fieldName()));
+            .map(selector -> getColumnIndex(csv.headers(), selector.fieldName()));
     Set<Integer> columnIndexes = new HashSet<>();
     Set<String> columns = Set.of(this.columns);
-    for (int i = 0; i < csv.header().length; i++) {
-      if (columns.contains(csv.header()[i])) {
+    for (int i = 0; i < csv.headers().length; i++) {
+      if (columns.contains(csv.headers()[i])) {
         columnIndexes.add(i);
       }
     }
     return Arrays.stream(csv.values())
         .filter(e -> whereColumnIndex.map(index -> e[index].equals(selector.value())).orElse(true))
         .map(
-            e -> {
-              List<String> res = new ArrayList<>();
-              for (int i = 0; i < e.length; i++) {
-                if (columnIndexes.contains(i)) {
-                  res.add(e[i]);
-                }
-              }
-              return res.toArray(new String[] {});
-            })
-        .collect(Collectors.toList())
-        .toArray(new String[][] {});
+            e ->
+                IntStream.range(0, e.length)
+                    .filter(columnIndexes::contains)
+                    .mapToObj(i -> e[i])
+                    .toArray(String[]::new))
+        .toArray(String[][]::new);
   }
 
   public static class Builder {

@@ -22,8 +22,8 @@ public class JoinRequest extends AbstractRequest<Csv> {
 
   @Override
   protected Csv execute() throws RequestException {
-    int fromColumnIndex = getColumnIndex(from.header(), by);
-    int onColumnIndex = getColumnIndex(on.header(), by);
+    int fromColumnIndex = getColumnIndex(from.headers(), by);
+    int onColumnIndex = getColumnIndex(on.headers(), by);
     if (fromColumnIndex < 0 || onColumnIndex < 0) {
       throw new RequestException(
           "Column is not exists. from_csv[%s] on_csv[%s]", fromColumnIndex, onColumnIndex);
@@ -50,11 +50,11 @@ public class JoinRequest extends AbstractRequest<Csv> {
   }
 
   private String[] getHeaders() {
-    String[] result = new String[from.header().length + on.header().length - 1];
-    System.arraycopy(from.header(), 0, result, 0, from.header().length);
-    int counter = from.header().length;
-    for (int i = 0; i < on.header().length; i++) {
-      String headerValue = on.header()[i];
+    String[] result = new String[from.headers().length + on.headers().length - 1];
+    System.arraycopy(from.headers(), 0, result, 0, from.headers().length);
+    int counter = from.headers().length;
+    for (int i = 0; i < on.headers().length; i++) {
+      String headerValue = on.headers()[i];
       if (!headerValue.equals(by)) {
         result[counter++] = headerValue;
       }

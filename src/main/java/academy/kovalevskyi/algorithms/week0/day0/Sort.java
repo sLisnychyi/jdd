@@ -60,4 +60,10 @@ public interface Sort {
   default String spaceComplexityWorst() {
     return "N";
   }
+
+  default <T> void swap(T[] target, int i, int j) {
+    T tmp = target[i];
+    target[i] = target[j];
+    target[j] = tmp;
+  }
 }

@@ -21,8 +21,8 @@ public class UpdateRequest extends AbstractRequest<Csv> {
   protected Csv execute() throws RequestException {
     Optional<Integer> whereColumnIndex =
         Optional.ofNullable(selector)
-            .map(selector -> getColumnIndex(csv.header(), selector.fieldName()));
-    int updateColumnIndex = getColumnIndex(csv.header(), updateSelector.fieldName());
+            .map(selector -> getColumnIndex(csv.headers(), selector.fieldName()));
+    int updateColumnIndex = getColumnIndex(csv.headers(), updateSelector.fieldName());
     if (updateColumnIndex < 0) {
       throw new RequestException(
           "invalid update request filed name = %s", updateSelector.fieldName());
@@ -35,7 +35,7 @@ public class UpdateRequest extends AbstractRequest<Csv> {
       }
       values.add(value);
     }
-    return new Csv.Builder().header(csv.header()).values(values.toArray(new String[][] {})).build();
+    return new Csv.Builder().header(csv.headers()).values(values.toArray(new String[][] {})).build();
   }
 
   public static class Builder {

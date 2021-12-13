@@ -4,7 +4,9 @@ import academy.kovalevskyi.javadeepdive.week1.day0.HttpRequestHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,7 +28,7 @@ public class ConcurrentHttpServer implements Runnable {
 
   public static void main(String[] args) {
     ConcurrentHttpServer server = new ConcurrentHttpServer();
-    new Thread(server).start();
+    CompletableFuture.runAsync(server);
     System.out.println("input 'stop' to stop the server:");
     Scanner scanner = new Scanner(System.in);
     while (server.isLive()) {
@@ -43,6 +45,8 @@ public class ConcurrentHttpServer implements Runnable {
       try {
         Socket socket = serverSocket.accept();
         executorService.submit(() -> new HttpRequestHandler(socket).executeRequest());
+      } catch (SocketException e) {
+        System.out.println("Socket closed!!!");
       } catch (IOException e) {
         // no-op
       }

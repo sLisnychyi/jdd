@@ -33,7 +33,7 @@ public class CsvColGetHandler implements HttpRequestsHandler {
 
   @Override
   public HttpResponse process(HttpRequest request) {
-    return Optional.of(getColumnIndex(csv.header(), colName))
+    return Optional.of(getColumnIndex(csv.headers(), colName))
         .filter(e -> e >= 0)
         .map(
             e ->

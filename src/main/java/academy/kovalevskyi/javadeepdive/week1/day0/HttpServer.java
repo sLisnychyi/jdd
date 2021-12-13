@@ -5,23 +5,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 
 public class HttpServer implements Runnable {
-  public static final int DEFAULT_PORT = 8080;
+  private static final int DEFAULT_PORT = 8080;
 
-  private ServerSocket serverSocket;
+  private final ServerSocket serverSocket;
 
-  public HttpServer() {
-    try {
-      this.serverSocket = new ServerSocket(DEFAULT_PORT);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  public HttpServer() throws IOException {
+    this.serverSocket = new ServerSocket(DEFAULT_PORT);
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     HttpServer httpServer = new HttpServer();
-    new Thread(httpServer).start();
+    CompletableFuture.runAsync(httpServer);
     System.out.println("input 'stop' to stop the server:");
     Scanner scanner = new Scanner(System.in);
     while (httpServer.isLive()) {

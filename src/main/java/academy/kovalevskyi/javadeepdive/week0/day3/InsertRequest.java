@@ -15,17 +15,17 @@ public class InsertRequest extends AbstractRequest<Csv> {
 
   @Override
   protected Csv execute() throws RequestException {
-    if (csv.header().length != line.length) {
+    if (csv.headers().length != line.length) {
       throw new RequestException(
           "invalid column length[%s] in the inserted line[%s], should be[%s].",
-          line.length, line, csv.header().length);
+          line.length, line, csv.headers().length);
     }
     List<String[]> values = new ArrayList<>();
     if (csv.values() != null) {
       Collections.addAll(values, csv.values());
     }
     values.add(line);
-    return new Csv.Builder().header(csv.header()).values(values.toArray(new String[][] {})).build();
+    return new Csv.Builder().header(csv.headers()).values(values.toArray(new String[][] {})).build();
   }
 
   public static class Builder {

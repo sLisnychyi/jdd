@@ -16,7 +16,7 @@ public class DeleteRequest extends AbstractRequest<Csv> {
 
   @Override
   protected Csv execute() throws RequestException {
-    int columnIndex = getColumnIndex(csv.header(), whereSelector.fieldName());
+    int columnIndex = getColumnIndex(csv.headers(), whereSelector.fieldName());
     if (columnIndex == -1) {
       throw new RequestException("Unable to find column = %s.", whereSelector.fieldName());
     }
@@ -25,7 +25,7 @@ public class DeleteRequest extends AbstractRequest<Csv> {
             .filter(e -> !e[columnIndex].equals(whereSelector.value()))
             .collect(Collectors.toList())
             .toArray(new String[][] {});
-    return new Csv.Builder().header(csv.header()).values(values).build();
+    return new Csv.Builder().header(csv.headers()).values(values).build();
   }
 
   public static class Builder {

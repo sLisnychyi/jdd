@@ -1,54 +1,71 @@
 package academy.kovalevskyi.javadeepdive.week0.day2;
 
 import academy.kovalevskyi.javadeepdive.week0.day0.StdBufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-// https://drive.google.com/file/d/1Jq-rt-lnfNOs4sVsuY5zrcTKfLjBJ4Qs/view?usp=sharing
 public class CsvHelper {
   private static final char DEFAULT_DELIMITER = ',';
 
   private CsvHelper() {}
 
-  public static Csv parseFile(Reader reader) throws FileNotFoundException {
-    return parseFile(reader, false, DEFAULT_DELIMITER);
+  public static Csv parseCsvFrom(Reader reader) throws IOException {
+    return parseCsvFrom(reader, false, DEFAULT_DELIMITER);
   }
 
-  public static Csv parseFile(Reader reader, boolean withHeader, char delimiter)
-      throws FileNotFoundException {
+  public static Csv parseCsvFrom(Reader reader, boolean withHeader, char delimiter)
+      throws IOException {
     Csv.Builder csvBuilder = new Csv.Builder();
     try (StdBufferedReader bufferedReader = new StdBufferedReader(reader)) {
-      if (withHeader) {
+      if (withHeader && bufferedReader.hasNext()) {
         String[] header = new String(bufferedReader.readLine()).split(String.valueOf(delimiter));
         csvBuilder.header(header);
       }
-      List<String[]> values = new ArrayList<>();
+      List<List<String>> values = new ArrayList<>();
       while (bufferedReader.hasNext()) {
         char[] line = bufferedReader.readLine();
-        if (line != null && line.length > 0) {
-          values.add(new String(line).split(String.valueOf(delimiter)));
+        List<String> lineValues = new ArrayList<>();
+        boolean quote = false;
+        String value = "";
+        for (char elem : line) {
+          if (elem == DEFAULT_DELIMITER && !quote) {
+            lineValues.add(value);
+            value = "";
+          } else if (elem == '\"') {
+            quote = !quote;
+          } else {
+            value += elem;
+          }
         }
+        if (value.length() > 0) lineValues.add(value);
+        values.add(lineValues);
       }
-      csvBuilder.values(values.toArray(new String[][] {}));
+      csvBuilder.values(
+          values.stream()
+                  .map(e -> e.toArray(String[]::new))
+                  .toArray(String[][]::new));
     } catch (IOException e) {
       e.printStackTrace();
     }
     return csvBuilder.build();
   }
 
-  public static void writeCsv(Writer writer, Csv csv, char delimiter) throws IOException {
+  public static void writeCsvTo(Writer writer, Csv csv, char delimiter) throws IOException {
     try (writer) {
       if (csv.withHeader()) {
-        writer.write(String.join(String.valueOf(delimiter), csv.header()));
+        writer.write(String.join(String.valueOf(delimiter), csv.headers()));
+        writer.write("\r");
         writer.write(System.lineSeparator());
       }
-      for (String[] line : csv.values()) {
-        writer.write(String.join(String.valueOf(delimiter), line));
-        writer.write(System.lineSeparator());
+      for (int i = 0; i < csv.values().length; i++) {
+        writer.write(String.join(String.valueOf(delimiter), csv.values()[i]));
+        if (i != csv.values().length - 1) {
+          writer.write("\r");
+          writer.write(System.lineSeparator());
+        }
       }
     }
   }

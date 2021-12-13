@@ -6,26 +6,25 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class HttpRequestHandler {
-  private final Socket socket;
-
-  public HttpRequestHandler(Socket socket) {
-    this.socket = socket;
-  }
+public record HttpRequestHandler(Socket socket) {
 
   public void executeRequest() {
     try (StdBufferedReader reader =
-            new StdBufferedReader(new InputStreamReader(socket.getInputStream()));
+                 new StdBufferedReader(new InputStreamReader(socket.getInputStream()));
          OutputStream outputStream = socket.getOutputStream()) {
       while (reader.hasNext()) {
         System.out.println(reader.readLine());
       }
       String res =
-          "HTTP/1.1 200 OK\n"
-              + "Server: HTTP server/0.1\n"
-              + "Content-type: text/html\n"
-              + "Content-Length: 20\n\n"
-              + "<b>It works!</b>\r\n\r\n";
+              """
+                      HTTP/1.1 200 OK
+                      Server: HTTP server/0.1
+                      Content-type: text/html
+                      Content-Length: 20
+
+                      <b>It works!</b>\r
+                      \r
+                      """;
       outputStream.write(res.getBytes());
       outputStream.flush();
     } catch (IOException e) {

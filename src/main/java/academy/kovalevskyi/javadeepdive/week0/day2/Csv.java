@@ -3,63 +3,47 @@ package academy.kovalevskyi.javadeepdive.week0.day2;
 import java.util.Arrays;
 import java.util.Objects;
 
-public record Csv(String[] header, String[][] values) {
+import static java.util.Arrays.stream;
+
+public record Csv(String[] headers, String[][] values) {
 
   public static class Builder {
-    private String[] header;
+    private String[] headers;
     private String[][] values;
 
-    public Builder() {}
-
-    public Builder(String[] header, String[][] values) {
-      this.header = header;
-      this.values = values;
-    }
-
-    public Builder header(String... header) {
-      this.header = header;
+    public Builder header(String... headers) {
+      this.headers = headers;
       return this;
     }
 
     public Builder values(String[][] values) {
+      if(headers != null && headers.length != values[0].length) throw new InvalidCsvLineLengthException();
+      if(stream(values).anyMatch(e -> e.length != values[0].length)) throw new InvalidCsvLineLengthException();
       this.values = values;
       return this;
     }
 
     public Csv build() {
-      return new Csv(header, values);
+      return new Csv(headers, values);
     }
   }
 
   public boolean withHeader() {
-    return Objects.nonNull(header);
+    return Objects.nonNull(headers);
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Csv csv = (Csv) o;
-    return Arrays.equals(header, csv.header) && Arrays.deepEquals(values, csv.values);
+    if(o == this) return true;
+    if(o == null || o.getClass() != getClass()) return false;
+    Csv that = (Csv) o;
+    return Arrays.equals(headers, that.headers()) && Arrays.deepEquals(values, that.values());
   }
 
   @Override
   public int hashCode() {
-    int result = Arrays.hashCode(header);
+    int result = Arrays.hashCode(headers);
     result = 31 * result + Arrays.deepHashCode(values);
     return result;
-  }
-
-  @Override
-  public String toString() {
-    return "Csv{"
-            + "header="
-            + Arrays.toString(header)
-            + ", values=" + Arrays.deepToString(values)
-            + '}';
   }
 }
